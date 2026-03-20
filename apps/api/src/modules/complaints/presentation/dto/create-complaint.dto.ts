@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { target_type } from '@prisma/client';
-import { IsEnum, IsNotEmpty, IsString, IsUUID, MaxLength } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  IsUUID,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateComplaintDto {
   @ApiProperty({

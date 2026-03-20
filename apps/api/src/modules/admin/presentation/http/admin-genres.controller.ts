@@ -89,7 +89,12 @@ export class AdminGenresController {
 
   @Post(ROUTES.ADMIN_GENRE_MERGE)
   @ApiOperation({ summary: 'Merge source genre into target genre' })
-  @ApiParam({ name: 'id', type: String, format: 'uuid', description: 'Source genre id' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    format: 'uuid',
+    description: 'Source genre id',
+  })
   @ApiBody({ type: MergeGenreDto })
   @ApiOkResponse({ type: GenreResponseDto })
   @ApiNotFoundResponse({ description: 'Source or target genre not found' })

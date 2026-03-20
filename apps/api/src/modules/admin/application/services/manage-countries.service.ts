@@ -35,7 +35,9 @@ export class ManageCountriesService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
       ) {
-        throw new ConflictException('Country with this code or name already exists');
+        throw new ConflictException(
+          'Country with this code or name already exists',
+        );
       }
 
       throw error;
@@ -56,7 +58,9 @@ export class ManageCountriesService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
       ) {
-        throw new ConflictException('Country with this code or name already exists');
+        throw new ConflictException(
+          'Country with this code or name already exists',
+        );
       }
 
       throw error;

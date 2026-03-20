@@ -19,8 +19,12 @@ export type {
 export const COMMENTS_REPOSITORY = Symbol('COMMENTS_REPOSITORY');
 
 export interface CommentsRepository {
-  createReviewComment(params: CreateReviewCommentParams): Promise<CommentDto | null>;
-  getReviewComments(params: GetReviewCommentsParams): Promise<CommentTreeDto[] | null>;
+  createReviewComment(
+    params: CreateReviewCommentParams,
+  ): Promise<CommentDto | null>;
+  getReviewComments(
+    params: GetReviewCommentsParams,
+  ): Promise<CommentTreeDto[] | null>;
   updateComment(params: UpdateCommentParams): Promise<CommentDto | null>;
   deleteComment(params: DeleteCommentParams): Promise<CommentDto | null>;
 }

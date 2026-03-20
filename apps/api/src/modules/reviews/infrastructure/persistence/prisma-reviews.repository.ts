@@ -17,7 +17,9 @@ import type { ReviewsRepository } from './reviews.repository';
 export class PrismaReviewsRepository implements ReviewsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getFilmReviews(params: GetFilmReviewsParams): Promise<FilmReviewDto[] | null> {
+  async getFilmReviews(
+    params: GetFilmReviewsParams,
+  ): Promise<FilmReviewDto[] | null> {
     const { filmId, requesterUserId } = params;
 
     const film = await this.prisma.films.findUnique({
@@ -82,17 +84,22 @@ export class PrismaReviewsRepository implements ReviewsRepository {
       currentVersion:
         review.review_versions_reviews_current_version_idToreview_versions
           ? {
-              id: review.review_versions_reviews_current_version_idToreview_versions.id,
+              id: review
+                .review_versions_reviews_current_version_idToreview_versions.id,
               versionNumber:
-                review.review_versions_reviews_current_version_idToreview_versions
+                review
+                  .review_versions_reviews_current_version_idToreview_versions
                   .version_number,
               title:
-                review.review_versions_reviews_current_version_idToreview_versions
+                review
+                  .review_versions_reviews_current_version_idToreview_versions
                   .title,
-              body:
-                review.review_versions_reviews_current_version_idToreview_versions.body,
+              body: review
+                .review_versions_reviews_current_version_idToreview_versions
+                .body,
               createdAt:
-                review.review_versions_reviews_current_version_idToreview_versions
+                review
+                  .review_versions_reviews_current_version_idToreview_versions
                   .created_at,
             }
           : null,
@@ -174,7 +181,9 @@ export class PrismaReviewsRepository implements ReviewsRepository {
     }
   }
 
-  async updateReview(params: UpdateReviewParams): Promise<UpdatedReviewDto | null> {
+  async updateReview(
+    params: UpdateReviewParams,
+  ): Promise<UpdatedReviewDto | null> {
     const { filmId, userId, title, body } = params;
 
     return this.prisma.$transaction(async (tx) => {

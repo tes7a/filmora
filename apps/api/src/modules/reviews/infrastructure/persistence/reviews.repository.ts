@@ -20,6 +20,8 @@ export const REVIEWS_REPOSITORY = Symbol('REVIEWS_REPOSITORY');
 
 export interface ReviewsRepository {
   getFilmReviews(params: GetFilmReviewsParams): Promise<FilmReviewDto[] | null>;
-  createFilmReview(params: CreateFilmReviewParams): Promise<CreatedFilmReviewDto | null>;
+  createFilmReview(
+    params: CreateFilmReviewParams,
+  ): Promise<CreatedFilmReviewDto | null>;
   updateReview(params: UpdateReviewParams): Promise<UpdatedReviewDto | null>;
 }

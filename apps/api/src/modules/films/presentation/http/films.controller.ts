@@ -61,8 +61,7 @@ export class FilmsController {
 
   @Get()
   @ApiOperation({
-    summary:
-      'Get films with filtering, sorting, and pagination',
+    summary: 'Get films with filtering, sorting, and pagination',
   })
   @ApiQuery({
     name: 'q',
@@ -283,5 +282,4 @@ export class FilmsController {
       userId: user.id,
     });
   }
-
 }

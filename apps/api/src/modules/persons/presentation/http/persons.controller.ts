@@ -41,7 +41,12 @@ export class PersonsController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get person by id' })
-  @ApiParam({ name: 'id', type: String, format: 'uuid', description: 'Person id' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    format: 'uuid',
+    description: 'Person id',
+  })
   @ApiOkResponse({ type: PersonDetailsResponseDto })
   @ApiNotFoundResponse({ description: 'Person not found' })
   async getPersonById(@Param('id', new ParseUUIDPipe()) personId: string) {

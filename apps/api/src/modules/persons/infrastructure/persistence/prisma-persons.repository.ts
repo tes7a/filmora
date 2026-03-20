@@ -20,7 +20,10 @@ export class PrismaPersonsRepository implements PersonsRepository {
     const { q, page, pageSize, sortBy, sortOrder } = params;
     const skip = (page - 1) * pageSize;
 
-    const sortMap: Record<PersonsSortBy, 'full_name' | 'created_at' | 'updated_at'> = {
+    const sortMap: Record<
+      PersonsSortBy,
+      'full_name' | 'created_at' | 'updated_at'
+    > = {
       fullName: 'full_name',
       createdAt: 'created_at',
       updatedAt: 'updated_at',

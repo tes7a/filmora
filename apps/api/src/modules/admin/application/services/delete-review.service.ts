@@ -14,7 +14,9 @@ export class DeleteReviewService {
     private readonly adminRepository: AdminRepository,
   ) {}
 
-  async execute(params: DeleteReviewOrCommentParams): Promise<ModerationActionDto> {
+  async execute(
+    params: DeleteReviewOrCommentParams,
+  ): Promise<ModerationActionDto> {
     const action = await this.adminRepository.deleteReview(params);
 
     if (!action) {

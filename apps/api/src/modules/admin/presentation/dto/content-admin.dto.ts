@@ -25,7 +25,12 @@ const SORT_ORDER = ['asc', 'desc'] as const;
 const GENRE_SORT_BY = ['name', 'status', 'createdAt', 'updatedAt'] as const;
 const TAG_SORT_BY = ['name', 'status', 'createdAt', 'updatedAt'] as const;
 const COUNTRY_SORT_BY = ['name', 'code', 'createdAt', 'updatedAt'] as const;
-const PERSON_SORT_BY = ['fullName', 'status', 'createdAt', 'updatedAt'] as const;
+const PERSON_SORT_BY = [
+  'fullName',
+  'status',
+  'createdAt',
+  'updatedAt',
+] as const;
 const FILM_SORT_BY = [
   'title',
   'status',
@@ -295,7 +300,10 @@ export class CreatePersonDto {
 }
 
 export class GetAdminPersonsQueryDto {
-  @ApiPropertyOptional({ description: 'Search by full name/slug', example: 'keanu' })
+  @ApiPropertyOptional({
+    description: 'Search by full name/slug',
+    example: 'keanu',
+  })
   @IsOptional()
   @IsString()
   @MinLength(1)
@@ -341,13 +349,21 @@ export class UpdatePersonDto {
   @MinLength(1)
   slug?: string;
 
-  @ApiPropertyOptional({ example: '1964-09-02', format: 'date', nullable: true })
+  @ApiPropertyOptional({
+    example: '1964-09-02',
+    format: 'date',
+    nullable: true,
+  })
   @IsOptional()
   @Type(() => Date)
   @IsDate()
   birthDate?: Date | null;
 
-  @ApiPropertyOptional({ example: '2030-01-01', format: 'date', nullable: true })
+  @ApiPropertyOptional({
+    example: '2030-01-01',
+    format: 'date',
+    nullable: true,
+  })
   @IsOptional()
   @Type(() => Date)
   @IsDate()
@@ -375,7 +391,9 @@ export class CreateAdminFilmDto {
   @MinLength(1)
   originalTitle: string;
 
-  @ApiPropertyOptional({ example: 'A hacker learns the truth about his world.' })
+  @ApiPropertyOptional({
+    example: 'A hacker learns the truth about his world.',
+  })
   @IsOptional()
   @IsString()
   description?: string;
@@ -409,7 +427,10 @@ export class CreateAdminFilmDto {
 }
 
 export class GetAdminFilmsQueryDto {
-  @ApiPropertyOptional({ description: 'Search by title/originalTitle', example: 'matrix' })
+  @ApiPropertyOptional({
+    description: 'Search by title/originalTitle',
+    example: 'matrix',
+  })
   @IsOptional()
   @IsString()
   @MinLength(1)
@@ -487,7 +508,10 @@ export class UpdateAdminFilmDto {
   @MinLength(1)
   originalTitle?: string;
 
-  @ApiPropertyOptional({ example: 'A hacker learns the truth about his world.', nullable: true })
+  @ApiPropertyOptional({
+    example: 'A hacker learns the truth about his world.',
+    nullable: true,
+  })
   @IsOptional()
   @IsString()
   description?: string | null;

@@ -21,7 +21,10 @@ import {
 import type { Request } from 'express';
 
 import type { AuthenticatedUser } from '@/modules/auth/infrastructure';
-import { JwtAuthGuard, OptionalJwtAuthGuard } from '@/modules/auth/presentation';
+import {
+  JwtAuthGuard,
+  OptionalJwtAuthGuard,
+} from '@/modules/auth/presentation';
 import { ROUTES } from '@/utils';
 
 import {

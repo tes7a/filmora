@@ -77,7 +77,12 @@ export class AdminComplaintsController {
   @Roles(ROLES.ADMIN, ROLES.MODERATOR)
   @Post(ROUTES.ADMIN_REVIEW_HIDE)
   @ApiOperation({ summary: 'Hide review and log moderation action' })
-  @ApiParam({ name: 'id', type: String, format: 'uuid', description: 'Review id' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    format: 'uuid',
+    description: 'Review id',
+  })
   @ApiBody({ type: ModerateTargetDto })
   @ApiOkResponse({ type: ModerationActionResponseDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -102,7 +107,12 @@ export class AdminComplaintsController {
   @Roles(ROLES.ADMIN, ROLES.MODERATOR)
   @Post(ROUTES.ADMIN_REVIEW_UNHIDE)
   @ApiOperation({ summary: 'Unhide review and log moderation action' })
-  @ApiParam({ name: 'id', type: String, format: 'uuid', description: 'Review id' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    format: 'uuid',
+    description: 'Review id',
+  })
   @ApiBody({ type: ModerateTargetDto })
   @ApiOkResponse({ type: ModerationActionResponseDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -127,7 +137,12 @@ export class AdminComplaintsController {
   @Roles(ROLES.ADMIN, ROLES.MODERATOR)
   @Post(ROUTES.ADMIN_COMMENT_HIDE)
   @ApiOperation({ summary: 'Hide comment and log moderation action' })
-  @ApiParam({ name: 'id', type: String, format: 'uuid', description: 'Comment id' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    format: 'uuid',
+    description: 'Comment id',
+  })
   @ApiBody({ type: ModerateTargetDto })
   @ApiOkResponse({ type: ModerationActionResponseDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -152,7 +167,12 @@ export class AdminComplaintsController {
   @Roles(ROLES.ADMIN, ROLES.MODERATOR)
   @Post(ROUTES.ADMIN_COMMENT_UNHIDE)
   @ApiOperation({ summary: 'Unhide comment and log moderation action' })
-  @ApiParam({ name: 'id', type: String, format: 'uuid', description: 'Comment id' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    format: 'uuid',
+    description: 'Comment id',
+  })
   @ApiBody({ type: ModerateTargetDto })
   @ApiOkResponse({ type: ModerationActionResponseDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -177,7 +197,12 @@ export class AdminComplaintsController {
   @Roles(ROLES.ADMIN, ROLES.MODERATOR)
   @Post(ROUTES.ADMIN_USER_BLOCK)
   @ApiOperation({ summary: 'Block user and log moderation action' })
-  @ApiParam({ name: 'id', type: String, format: 'uuid', description: 'User id' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    format: 'uuid',
+    description: 'User id',
+  })
   @ApiBody({ type: ModerateTargetDto })
   @ApiOkResponse({ type: ModerationActionResponseDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -202,7 +227,12 @@ export class AdminComplaintsController {
   @Roles(ROLES.ADMIN, ROLES.MODERATOR)
   @Post(ROUTES.ADMIN_REVIEW_DELETE)
   @ApiOperation({ summary: 'Delete review and log moderation action' })
-  @ApiParam({ name: 'id', type: String, format: 'uuid', description: 'Review id' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    format: 'uuid',
+    description: 'Review id',
+  })
   @ApiBody({ type: ModerateTargetDto })
   @ApiOkResponse({ type: ModerationActionResponseDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -227,7 +257,12 @@ export class AdminComplaintsController {
   @Roles(ROLES.ADMIN, ROLES.MODERATOR)
   @Post(ROUTES.ADMIN_COMMENT_DELETE)
   @ApiOperation({ summary: 'Delete comment and log moderation action' })
-  @ApiParam({ name: 'id', type: String, format: 'uuid', description: 'Comment id' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    format: 'uuid',
+    description: 'Comment id',
+  })
   @ApiBody({ type: ModerateTargetDto })
   @ApiOkResponse({ type: ModerationActionResponseDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })

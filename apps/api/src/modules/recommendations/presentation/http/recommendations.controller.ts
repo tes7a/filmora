@@ -26,7 +26,9 @@ export class RecommendationsController {
   ) {}
 
   @Get(ROUTES.RECOMMENDATIONS_POPULAR)
-  @ApiOperation({ summary: 'Get popular recommendations by rating and ratings count' })
+  @ApiOperation({
+    summary: 'Get popular recommendations by rating and ratings count',
+  })
   @ApiOkResponse({ type: PaginatedRecommendationsResponseDto })
   @ApiBadRequestResponse({ description: 'Validation error for query params' })
   async getPopular(@Query() query: GetRecommendationsQueryDto) {
@@ -47,7 +49,9 @@ export class RecommendationsController {
   }
 
   @Get(ROUTES.RECOMMENDATIONS_NEW)
-  @ApiOperation({ summary: 'Get new recommendations by release and added date' })
+  @ApiOperation({
+    summary: 'Get new recommendations by release and added date',
+  })
   @ApiOkResponse({ type: PaginatedRecommendationsResponseDto })
   @ApiBadRequestResponse({ description: 'Validation error for query params' })
   async getNew(@Query() query: GetRecommendationsQueryDto) {

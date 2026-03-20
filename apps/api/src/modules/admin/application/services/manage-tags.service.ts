@@ -35,7 +35,9 @@ export class ManageTagsService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
       ) {
-        throw new ConflictException('Tag with this name or slug already exists');
+        throw new ConflictException(
+          'Tag with this name or slug already exists',
+        );
       }
 
       throw error;
@@ -56,7 +58,9 @@ export class ManageTagsService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
       ) {
-        throw new ConflictException('Tag with this name or slug already exists');
+        throw new ConflictException(
+          'Tag with this name or slug already exists',
+        );
       }
 
       throw error;

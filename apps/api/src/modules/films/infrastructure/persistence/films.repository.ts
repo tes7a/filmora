@@ -35,6 +35,10 @@ export interface FilmsRepository {
     filmId: string,
     params: GetSimilarFilmsParams,
   ): Promise<PaginatedSimilarFilmsDto | null>;
-  updateFilmRating(params: UpdateFilmRatingParams): Promise<FilmRatingStatsDto | null>;
-  getMyFilmRating(params: GetMyFilmRatingParams): Promise<MyFilmRatingDto | null>;
+  updateFilmRating(
+    params: UpdateFilmRatingParams,
+  ): Promise<FilmRatingStatsDto | null>;
+  getMyFilmRating(
+    params: GetMyFilmRatingParams,
+  ): Promise<MyFilmRatingDto | null>;
 }

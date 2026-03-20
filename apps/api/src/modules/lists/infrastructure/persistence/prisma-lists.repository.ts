@@ -74,7 +74,9 @@ export class PrismaListsRepository implements ListsRepository {
     return this.toUserListDto(created);
   }
 
-  async addFilmToList(params: AddFilmToListParams): Promise<UserListDto | null> {
+  async addFilmToList(
+    params: AddFilmToListParams,
+  ): Promise<UserListDto | null> {
     const { userId, listId, filmId, position, note } = params;
 
     try {

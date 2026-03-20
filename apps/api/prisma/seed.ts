@@ -138,7 +138,10 @@ async function main() {
     });
   };
 
-  const ensureRole = async (userId: string, roleCode: 'user' | 'moderator' | 'admin') => {
+  const ensureRole = async (
+    userId: string,
+    roleCode: 'user' | 'moderator' | 'admin',
+  ) => {
     const role = roleByCode.get(roleCode);
     if (!role) return;
 
@@ -249,17 +252,35 @@ async function main() {
     where: { name: { in: countriesToSeed.map((country) => country.name) } },
     select: { id: true, name: true },
   });
-  const countryByName = new Map(countryRecords.map((country) => [country.name, country]));
+  const countryByName = new Map(
+    countryRecords.map((country) => [country.name, country]),
+  );
 
   // Seed tags
   const tagsToSeed = [
     { name: 'Cyberpunk', slug: 'cyberpunk', description: 'Cyberpunk stories' },
-    { name: 'Time Travel', slug: 'time-travel', description: 'Time travel plots' },
-    { name: 'Based on True Story', slug: 'based-on-true-story', description: 'Inspired by real events' },
+    {
+      name: 'Time Travel',
+      slug: 'time-travel',
+      description: 'Time travel plots',
+    },
+    {
+      name: 'Based on True Story',
+      slug: 'based-on-true-story',
+      description: 'Inspired by real events',
+    },
     { name: 'Dystopia', slug: 'dystopia', description: 'Dystopian setting' },
-    { name: 'Coming of Age', slug: 'coming-of-age', description: 'Coming of age themes' },
+    {
+      name: 'Coming of Age',
+      slug: 'coming-of-age',
+      description: 'Coming of age themes',
+    },
     { name: 'Heist', slug: 'heist', description: 'Heist narrative' },
-    { name: 'Mind-Bending', slug: 'mind-bending', description: 'Complex nonlinear narratives' },
+    {
+      name: 'Mind-Bending',
+      slug: 'mind-bending',
+      description: 'Complex nonlinear narratives',
+    },
     { name: 'Epic', slug: 'epic', description: 'Epic scale stories' },
   ] as const;
 
@@ -331,13 +352,16 @@ async function main() {
     where: { slug: { in: personsToSeed.map((person) => person.slug) } },
     select: { id: true, slug: true },
   });
-  const personBySlug = new Map(personRecords.map((person) => [person.slug, person]));
+  const personBySlug = new Map(
+    personRecords.map((person) => [person.slug, person]),
+  );
 
   // Seed films
   const filmsToSeed = Array.from({ length: 50 }, (_, index) => {
     const i = index + 1;
     const adjective = filmAdjectives[index % filmAdjectives.length];
-    const noun = filmNouns[Math.floor(index / filmAdjectives.length) % filmNouns.length];
+    const noun =
+      filmNouns[Math.floor(index / filmAdjectives.length) % filmNouns.length];
     const releaseYear = 1980 + (index % 46);
     const durationMin = 85 + (index % 70);
     const averageRating = Number((5 + (index % 41) * 0.1).toFixed(1));
@@ -407,7 +431,9 @@ async function main() {
 
   // Seed film relations (countries, tags, persons) for mock films
   const mockFilms = await prisma.films.findMany({
-    where: { original_title: { in: filmsToSeed.map((film) => film.originalTitle) } },
+    where: {
+      original_title: { in: filmsToSeed.map((film) => film.originalTitle) },
+    },
     select: { id: true, original_title: true },
     orderBy: { original_title: 'asc' },
   });
@@ -442,7 +468,9 @@ async function main() {
 
     const filmCountriesData = countryNames
       .map((name) => countryByName.get(name))
-      .filter((country): country is { id: string; name: string } => Boolean(country))
+      .filter((country): country is { id: string; name: string } =>
+        Boolean(country),
+      )
       .map((country) => ({
         film_id: film.id,
         country_id: country.id,

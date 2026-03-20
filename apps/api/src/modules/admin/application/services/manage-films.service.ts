@@ -35,7 +35,9 @@ export class ManageFilmsService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
       ) {
-        throw new ConflictException('Film with this original title already exists');
+        throw new ConflictException(
+          'Film with this original title already exists',
+        );
       }
 
       throw error;
@@ -56,7 +58,9 @@ export class ManageFilmsService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
       ) {
-        throw new ConflictException('Film with this original title already exists');
+        throw new ConflictException(
+          'Film with this original title already exists',
+        );
       }
 
       throw error;

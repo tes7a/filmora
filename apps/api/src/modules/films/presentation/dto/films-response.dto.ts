@@ -135,7 +135,9 @@ export class FilmDetailsResponseDto {
   @ApiProperty({ example: 'The Matrix' })
   originalTitle: string;
 
-  @ApiProperty({ example: 'A computer hacker learns about the true nature of reality.' })
+  @ApiProperty({
+    example: 'A computer hacker learns about the true nature of reality.',
+  })
   description: string | null;
 
   @ApiProperty({ example: 1999 })

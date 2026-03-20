@@ -36,7 +36,9 @@ export class ManageGenresService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
       ) {
-        throw new ConflictException('Genre with this name or slug already exists');
+        throw new ConflictException(
+          'Genre with this name or slug already exists',
+        );
       }
 
       throw error;
@@ -57,7 +59,9 @@ export class ManageGenresService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
       ) {
-        throw new ConflictException('Genre with this name or slug already exists');
+        throw new ConflictException(
+          'Genre with this name or slug already exists',
+        );
       }
 
       throw error;
@@ -82,8 +86,13 @@ export class ManageGenresService {
 
       return genre;
     } catch (error) {
-      if (error instanceof Error && error.message === 'GENRE_MERGE_SAME_TARGET') {
-        throw new ConflictException('Source and target genre must be different');
+      if (
+        error instanceof Error &&
+        error.message === 'GENRE_MERGE_SAME_TARGET'
+      ) {
+        throw new ConflictException(
+          'Source and target genre must be different',
+        );
       }
 
       throw error;

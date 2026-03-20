@@ -42,7 +42,9 @@ import {
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(ROLES.ADMIN, ROLES.MODERATOR)
 export class AdminCountriesController {
-  constructor(private readonly manageCountriesService: ManageCountriesService) {}
+  constructor(
+    private readonly manageCountriesService: ManageCountriesService,
+  ) {}
 
   @Get(ROUTES.ADMIN_COUNTRIES)
   @ApiOperation({ summary: 'Get countries' })

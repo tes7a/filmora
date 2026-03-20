@@ -1,159 +1,112 @@
-# Turborepo starter
+# Filmora Monorepo
 
-This Turborepo starter is maintained by the Turborepo core team.
+Monorepo for Filmora products:
 
-## Using this example
+- `apps/api` - NestJS API
+- `apps/web` - Next.js web client
+- `apps/docs` - Next.js admin/docs app (can be replaced with Refine admin)
+- `packages/ui` - shared UI components
+- `packages/eslint-config` - shared eslint configs
+- `packages/typescript-config` - shared tsconfig presets
 
-Run the following command:
+## Requirements
 
-```sh
-npx create-turbo@latest
+- Node.js 22+
+- pnpm 9+
+- Docker (for local Postgres)
+
+## Install
+
+```bash
+pnpm install
 ```
 
-## What's inside?
+## Environment
 
-This Turborepo includes the following packages/apps:
+1. Copy root env:
 
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
+```bash
+cp .env.example .env
 ```
 
-Without global `turbo`, use your package manager:
+2. API-specific env (optional, if you prefer local app env):
 
-```sh
-cd my-turborepo
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+```bash
+cp apps/api/.env.example apps/api/.env
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+Local DB in Docker is exposed on `localhost:5433`.
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+## Local development
 
-```sh
-turbo build --filter=docs
+Start database:
+
+```bash
+docker compose up -d
 ```
 
-Without global `turbo`:
+Run all apps in dev mode:
 
-```sh
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+```bash
+pnpm dev
 ```
 
-### Develop
+Run separately:
 
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
+```bash
+pnpm dev:api
+pnpm dev:web
+pnpm dev:admin
 ```
 
-Without global `turbo`, use your package manager:
+## Quality checks
 
-```sh
-cd my-turborepo
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+```bash
+pnpm format:check
+pnpm lint
+pnpm check-types
+pnpm build
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+## Git hooks (Husky)
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+Pre-commit runs:
 
-```sh
-turbo dev --filter=web
-```
+- branch name check (`feat/*`, `fix/*`, `refactor/*`, `chore/*`, `docs/*`, `test/*`)
+- `lint-staged`
+- `pnpm check-types`
+- `pnpm format:check`
 
-Without global `turbo`:
+Commit message hook runs `commitlint` with allowed commit types:
 
-```sh
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+- `feat`
+- `fix`
+- `refactor`
+- `chore`
+- `docs`
+- `test`
 
-### Remote Caching
+Commit message examples:
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+- `feat: add recommendations endpoint`
+- `fix: correct pagination in admin films`
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+## CI
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+Root workflow: `.github/workflows/ci.yml`
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+Pipeline steps:
 
-```sh
-cd my-turborepo
-turbo login
-```
+1. install deps
+2. format check
+3. lint
+4. type check
+5. build
 
-Without global `turbo`, use your package manager:
+## Notes for upcoming Refine admin app
 
-```sh
-cd my-turborepo
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
+When you add Refine admin, create `apps/admin` and then:
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+1. Add scripts (`dev`, `build`, `lint`, `check-types`) in `apps/admin/package.json`.
+2. Update `pnpm dev:admin` script in root `package.json` to `--filter=./apps/admin`.
+3. Add app-level env vars with `NEXT_PUBLIC_` prefix when needed.

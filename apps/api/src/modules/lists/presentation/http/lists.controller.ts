@@ -68,7 +68,10 @@ export class ListsController {
   @ApiBody({ type: CreateCustomListDto })
   @ApiOkResponse({ type: UserListResponseDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  async createCustomList(@Req() req: Request, @Body() body: CreateCustomListDto) {
+  async createCustomList(
+    @Req() req: Request,
+    @Body() body: CreateCustomListDto,
+  ) {
     const user = req.user as AuthenticatedUser;
 
     return this.createCustomListService.execute({
@@ -80,7 +83,12 @@ export class ListsController {
 
   @Post(ROUTES.LIST_ITEMS)
   @ApiOperation({ summary: 'Add film to list' })
-  @ApiParam({ name: 'id', type: String, format: 'uuid', description: 'List id' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    format: 'uuid',
+    description: 'List id',
+  })
   @ApiBody({ type: AddFilmToListDto })
   @ApiOkResponse({ type: UserListResponseDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -103,8 +111,18 @@ export class ListsController {
 
   @Delete(ROUTES.LIST_ITEM_BY_FILM)
   @ApiOperation({ summary: 'Remove film from list' })
-  @ApiParam({ name: 'id', type: String, format: 'uuid', description: 'List id' })
-  @ApiParam({ name: 'filmId', type: String, format: 'uuid', description: 'Film id' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    format: 'uuid',
+    description: 'List id',
+  })
+  @ApiParam({
+    name: 'filmId',
+    type: String,
+    format: 'uuid',
+    description: 'Film id',
+  })
   @ApiOkResponse({ type: UserListResponseDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiNotFoundResponse({ description: 'List item not found' })
@@ -124,7 +142,12 @@ export class ListsController {
 
   @Patch(ROUTES.LIST_BY_ID)
   @ApiOperation({ summary: 'Update custom list name/privacy' })
-  @ApiParam({ name: 'id', type: String, format: 'uuid', description: 'List id' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    format: 'uuid',
+    description: 'List id',
+  })
   @ApiBody({ type: UpdateListDto })
   @ApiOkResponse({ type: UserListResponseDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })

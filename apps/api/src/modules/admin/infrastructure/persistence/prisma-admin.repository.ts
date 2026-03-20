@@ -252,13 +252,21 @@ export class PrismaAdminRepository implements AdminRepository {
   async hideReview(
     params: ModerateCommentOrReviewParams,
   ): Promise<ModerationActionDto | null> {
-    return this.moderateReview(params, review_status.hidden, action_type.hide_review);
+    return this.moderateReview(
+      params,
+      review_status.hidden,
+      action_type.hide_review,
+    );
   }
 
   async unhideReview(
     params: ModerateCommentOrReviewParams,
   ): Promise<ModerationActionDto | null> {
-    return this.moderateReview(params, review_status.visible, action_type.unhide_review);
+    return this.moderateReview(
+      params,
+      review_status.visible,
+      action_type.unhide_review,
+    );
   }
 
   async deleteReview(
@@ -513,7 +521,9 @@ export class PrismaAdminRepository implements AdminRepository {
     });
   }
 
-  async blockUser(params: BlockUserParams): Promise<ModerationActionDto | null> {
+  async blockUser(
+    params: BlockUserParams,
+  ): Promise<ModerationActionDto | null> {
     const { userId, moderatorId, reason, complaintId } = params;
 
     return this.prisma.$transaction(async (tx) => {
@@ -662,7 +672,9 @@ export class PrismaAdminRepository implements AdminRepository {
         data: {
           ...(params.name !== undefined ? { name: params.name } : {}),
           ...(params.slug !== undefined ? { slug: params.slug } : {}),
-          ...(params.description !== undefined ? { description: params.description } : {}),
+          ...(params.description !== undefined
+            ? { description: params.description }
+            : {}),
           ...(params.status !== undefined ? { status: params.status } : {}),
           updated_at: new Date(),
         },
@@ -830,7 +842,9 @@ export class PrismaAdminRepository implements AdminRepository {
         data: {
           ...(params.name !== undefined ? { name: params.name } : {}),
           ...(params.slug !== undefined ? { slug: params.slug } : {}),
-          ...(params.description !== undefined ? { description: params.description } : {}),
+          ...(params.description !== undefined
+            ? { description: params.description }
+            : {}),
           ...(params.status !== undefined ? { status: params.status } : {}),
           updated_at: new Date(),
         },
@@ -1045,10 +1059,16 @@ export class PrismaAdminRepository implements AdminRepository {
       const person = await this.prisma.persons.update({
         where: { id: params.id },
         data: {
-          ...(params.fullName !== undefined ? { full_name: params.fullName } : {}),
+          ...(params.fullName !== undefined
+            ? { full_name: params.fullName }
+            : {}),
           ...(params.slug !== undefined ? { slug: params.slug } : {}),
-          ...(params.birthDate !== undefined ? { birth_date: params.birthDate } : {}),
-          ...(params.deathDate !== undefined ? { death_date: params.deathDate } : {}),
+          ...(params.birthDate !== undefined
+            ? { birth_date: params.birthDate }
+            : {}),
+          ...(params.deathDate !== undefined
+            ? { death_date: params.deathDate }
+            : {}),
           ...(params.bio !== undefined ? { bio: params.bio } : {}),
           ...(params.status !== undefined ? { status: params.status } : {}),
           updated_at: new Date(),
@@ -1194,7 +1214,9 @@ export class PrismaAdminRepository implements AdminRepository {
     return this.toAdminFilmDto(film);
   }
 
-  async updateFilm(params: UpdateAdminFilmParams): Promise<AdminFilmDto | null> {
+  async updateFilm(
+    params: UpdateAdminFilmParams,
+  ): Promise<AdminFilmDto | null> {
     try {
       const film = await this.prisma.films.update({
         where: { id: params.id },
@@ -1203,10 +1225,18 @@ export class PrismaAdminRepository implements AdminRepository {
           ...(params.originalTitle !== undefined
             ? { original_title: params.originalTitle }
             : {}),
-          ...(params.description !== undefined ? { description: params.description } : {}),
-          ...(params.releaseYear !== undefined ? { release_year: params.releaseYear } : {}),
-          ...(params.durationMin !== undefined ? { duration_min: params.durationMin } : {}),
-          ...(params.ageRating !== undefined ? { age_rating: params.ageRating } : {}),
+          ...(params.description !== undefined
+            ? { description: params.description }
+            : {}),
+          ...(params.releaseYear !== undefined
+            ? { release_year: params.releaseYear }
+            : {}),
+          ...(params.durationMin !== undefined
+            ? { duration_min: params.durationMin }
+            : {}),
+          ...(params.ageRating !== undefined
+            ? { age_rating: params.ageRating }
+            : {}),
           ...(params.status !== undefined ? { status: params.status } : {}),
           ...(params.popularityScore !== undefined
             ? { popularity_score: new Prisma.Decimal(params.popularityScore) }

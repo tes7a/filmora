@@ -46,7 +46,9 @@ export class PrismaRecommendationsRepository implements RecommendationsRepositor
     return this.getRecommendationsWithPaging(params, 'date');
   }
 
-  private toRecommendationItem(film: RecommendationEntity): RecommendationItemDto {
+  private toRecommendationItem(
+    film: RecommendationEntity,
+  ): RecommendationItemDto {
     return {
       id: film.id,
       title: film.title,

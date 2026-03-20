@@ -29,12 +29,20 @@ export class CreateReviewCommentService {
 
       return comment;
     } catch (error) {
-      if (error instanceof Error && error.message === 'PARENT_COMMENT_NOT_FOUND') {
+      if (
+        error instanceof Error &&
+        error.message === 'PARENT_COMMENT_NOT_FOUND'
+      ) {
         throw new NotFoundException('Parent comment not found');
       }
 
-      if (error instanceof Error && error.message === 'PARENT_COMMENT_WRONG_REVIEW') {
-        throw new BadRequestException('Parent comment does not belong to this review');
+      if (
+        error instanceof Error &&
+        error.message === 'PARENT_COMMENT_WRONG_REVIEW'
+      ) {
+        throw new BadRequestException(
+          'Parent comment does not belong to this review',
+        );
       }
 
       throw error;

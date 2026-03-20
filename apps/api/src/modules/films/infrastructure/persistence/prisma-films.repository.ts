@@ -248,62 +248,63 @@ export class PrismaFilmsRepository implements FilmsRepository {
     const tagIds = film.film_tags.map((item) => item.tag_id);
     const personIds = film.film_person_roles.map((item) => item.person_id);
 
-    const similarFilms = genreIds.length || tagIds.length
-      ? await this.prisma.films.findMany({
-          where: {
-            id: { not: filmId },
-            status: film_status.visible,
-            OR: [
-              ...(genreIds.length
-                ? [
-                    {
-                      film_genres: {
-                        some: {
-                          genre_id: { in: genreIds },
+    const similarFilms =
+      genreIds.length || tagIds.length
+        ? await this.prisma.films.findMany({
+            where: {
+              id: { not: filmId },
+              status: film_status.visible,
+              OR: [
+                ...(genreIds.length
+                  ? [
+                      {
+                        film_genres: {
+                          some: {
+                            genre_id: { in: genreIds },
+                          },
                         },
                       },
-                    },
-                  ]
-                : []),
-              ...(tagIds.length
-                ? [
-                    {
-                      film_tags: {
-                        some: {
-                          tag_id: { in: tagIds },
+                    ]
+                  : []),
+                ...(tagIds.length
+                  ? [
+                      {
+                        film_tags: {
+                          some: {
+                            tag_id: { in: tagIds },
+                          },
                         },
                       },
+                    ]
+                  : []),
+              ],
+            },
+            select: {
+              id: true,
+              title: true,
+              original_title: true,
+              release_year: true,
+              duration_min: true,
+              age_rating: true,
+              average_rating: true,
+              ratings_count: true,
+              created_at: true,
+              film_genres: {
+                select: {
+                  genres: {
+                    select: {
+                      id: true,
+                      name: true,
+                      slug: true,
                     },
-                  ]
-                : []),
-            ],
-          },
-          select: {
-            id: true,
-            title: true,
-            original_title: true,
-            release_year: true,
-            duration_min: true,
-            age_rating: true,
-            average_rating: true,
-            ratings_count: true,
-            created_at: true,
-            film_genres: {
-              select: {
-                genres: {
-                  select: {
-                    id: true,
-                    name: true,
-                    slug: true,
                   },
                 },
               },
             },
-          },
-          orderBy: [{ average_rating: 'desc' }, { created_at: 'desc' }],
-          take: 12,
-        })
-      : [];
+            orderBy: [{ average_rating: 'desc' }, { created_at: 'desc' }],
+            take: 12,
+          })
+        : [];
 
     const samePersonFilms = personIds.length
       ? await this.prisma.films.findMany({
@@ -377,12 +378,21 @@ export class PrismaFilmsRepository implements FilmsRepository {
 
     const genreIds = new Set(film.film_genres.map((item) => item.genre_id));
     const tagIds = new Set(film.film_tags.map((item) => item.tag_id));
-    const personIds = new Set(film.film_person_roles.map((item) => item.person_id));
+    const personIds = new Set(
+      film.film_person_roles.map((item) => item.person_id),
+    );
 
-    const baseGenres = new Map(film.film_genres.map((item) => [item.genre_id, item.genres.name]));
-    const baseTags = new Map(film.film_tags.map((item) => [item.tag_id, item.tags.name]));
+    const baseGenres = new Map(
+      film.film_genres.map((item) => [item.genre_id, item.genres.name]),
+    );
+    const baseTags = new Map(
+      film.film_tags.map((item) => [item.tag_id, item.tags.name]),
+    );
     const basePersons = new Map(
-      film.film_person_roles.map((item) => [item.person_id, item.persons.full_name]),
+      film.film_person_roles.map((item) => [
+        item.person_id,
+        item.persons.full_name,
+      ]),
     );
 
     if (!genreIds.size && !tagIds.size && !personIds.size) {
@@ -600,11 +610,17 @@ export class PrismaFilmsRepository implements FilmsRepository {
     scored.sort((a, b) => {
       const bySimilarity = (b.score - a.score) * direction;
       const byRating =
-        (Number(b.candidate.average_rating) - Number(a.candidate.average_rating)) * direction;
-      const byDate = (b.candidate.release_year - a.candidate.release_year) * direction;
+        (Number(b.candidate.average_rating) -
+          Number(a.candidate.average_rating)) *
+        direction;
+      const byDate =
+        (b.candidate.release_year - a.candidate.release_year) * direction;
       const byPopularity =
-        (Number(b.candidate.popularity_score) - Number(a.candidate.popularity_score)) * direction;
-      const byCount = (b.candidate.ratings_count - a.candidate.ratings_count) * direction;
+        (Number(b.candidate.popularity_score) -
+          Number(a.candidate.popularity_score)) *
+        direction;
+      const byCount =
+        (b.candidate.ratings_count - a.candidate.ratings_count) * direction;
 
       if (sortBy === 'rating') {
         return byRating || byCount || bySimilarity;
@@ -623,7 +639,9 @@ export class PrismaFilmsRepository implements FilmsRepository {
 
     const total = scored.length;
     const start = (page - 1) * pageSize;
-    const items = scored.slice(start, start + pageSize).map((item) => item.similar);
+    const items = scored
+      .slice(start, start + pageSize)
+      .map((item) => item.similar);
 
     return {
       items,
@@ -723,7 +741,9 @@ export class PrismaFilmsRepository implements FilmsRepository {
     };
   }
 
-  private async getFilmDetailsById(filmId: string): Promise<FilmDetailsEntity | null> {
+  private async getFilmDetailsById(
+    filmId: string,
+  ): Promise<FilmDetailsEntity | null> {
     return this.prisma.films.findFirst({
       where: {
         id: filmId,

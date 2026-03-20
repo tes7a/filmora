@@ -6,7 +6,10 @@ import {
   GetReviewCommentsService,
   UpdateCommentService,
 } from './application';
-import { COMMENTS_REPOSITORY, PrismaCommentsRepository } from './infrastructure';
+import {
+  COMMENTS_REPOSITORY,
+  PrismaCommentsRepository,
+} from './infrastructure';
 import { CommentsController, ReviewCommentsController } from './presentation';
 
 @Module({

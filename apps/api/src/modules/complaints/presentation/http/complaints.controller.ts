@@ -20,7 +20,9 @@ import { ComplaintResponseDto, CreateComplaintDto } from '../dto';
 @Controller(ROUTES.COMPLAINTS)
 @ApiTags('Complaints')
 export class ComplaintsController {
-  constructor(private readonly createComplaintService: CreateComplaintService) {}
+  constructor(
+    private readonly createComplaintService: CreateComplaintService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Post()

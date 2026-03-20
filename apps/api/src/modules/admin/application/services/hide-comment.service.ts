@@ -14,7 +14,9 @@ export class HideCommentService {
     private readonly adminRepository: AdminRepository,
   ) {}
 
-  async execute(params: ModerateCommentOrReviewParams): Promise<ModerationActionDto> {
+  async execute(
+    params: ModerateCommentOrReviewParams,
+  ): Promise<ModerationActionDto> {
     const action = await this.adminRepository.hideComment(params);
 
     if (!action) {

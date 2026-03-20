@@ -33,7 +33,10 @@ export class UpdateListService {
         throw new ConflictException('Only custom lists can be updated');
       }
 
-      if (error instanceof Error && error.message === 'LIST_NAME_ALREADY_EXISTS') {
+      if (
+        error instanceof Error &&
+        error.message === 'LIST_NAME_ALREADY_EXISTS'
+      ) {
         throw new ConflictException('List with this name already exists');
       }
 

@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+sh ./scripts/check-branch-name.sh
+pnpm lint-staged
+pnpm check-types

@@ -1,5 +1,13 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsIn, IsInt, IsOptional, IsString, Max, Min, MinLength } from 'class-validator';
+import {
+  IsIn,
+  IsInt,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+  MinLength,
+} from 'class-validator';
 
 const SORT_BY = ['fullName', 'createdAt', 'updatedAt'] as const;
 const SORT_ORDER = ['asc', 'desc'] as const;
@@ -8,7 +16,10 @@ export type PersonsSortBy = (typeof SORT_BY)[number];
 export type SortOrder = (typeof SORT_ORDER)[number];
 
 export class GetPersonsQueryDto {
-  @ApiPropertyOptional({ description: 'Search by fullName/slug', example: 'nolan' })
+  @ApiPropertyOptional({
+    description: 'Search by fullName/slug',
+    example: 'nolan',
+  })
   @IsOptional()
   @IsString()
   @MinLength(1)
