@@ -1,0 +1,67 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "pnpm: dev:web",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm dev:web"
+    },
+    {
+      "name": "pnpm: dev:admin",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm dev:admin"
+    },
+    {
+      "name": "pnpm: dev:api",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm dev:api"
+    },
+    {
+      "name": "pnpm: build",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm build"
+    },
+    {
+      "name": "pnpm: lint:fix",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm lint:fix"
+    },
+    {
+      "name": "pnpm: format:check",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm format:check"
+    },
+    {
+      "name": "chrome:web",
+      "request": "launch",
+      "type": "pwa-chrome",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "chrome:admin",
+      "request": "launch",
+      "type": "pwa-chrome",
+      "url": "http://localhost:3001",
+      "webRoot": "${workspaceFolder}"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Run web (dev + chrome)",
+      "configurations": ["pnpm: dev:web", "chrome:web"],
+      "stopAll": true
+    },
+    {
+      "name": "Run admin (dev + chrome)",
+      "configurations": ["pnpm: dev:admin", "chrome:admin"],
+      "stopAll": true
+    }
+  ]
+}
