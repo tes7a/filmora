@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "yoavbls.pretty-ts-errors",
+    "mikestead.dotenv",
+    "eamodio.gitlens",
+    "bradlc.vscode-tailwindcss",
+    "lokalise.i18n-ally"
+  ]
+}

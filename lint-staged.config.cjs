@@ -24,6 +24,7 @@ function createWorkspaceEslintCommand(workspaceDir) {
 module.exports = {
   'apps/api/**/*.{ts,tsx,js,jsx,mjs,cjs}': createWorkspaceEslintCommand('apps/api'),
   'apps/web/**/*.{ts,tsx,js,jsx,mjs,cjs}': createWorkspaceEslintCommand('apps/web'),
+  'apps/admin/**/*.{ts,tsx,js,jsx,mjs,cjs}': createWorkspaceEslintCommand('apps/admin'),
   'apps/docs/**/*.{ts,tsx,js,jsx,mjs,cjs}': createWorkspaceEslintCommand('apps/docs'),
   'packages/ui/**/*.{ts,tsx,js,jsx,mjs,cjs}': createWorkspaceEslintCommand(
     'packages/ui',

@@ -6,7 +6,7 @@
     "dev": "pnpm exec turbo run dev",
     "dev:api": "pnpm exec turbo run dev --filter=./apps/api",
     "dev:web": "pnpm exec turbo run dev --filter=./apps/web",
-    "dev:admin": "pnpm exec turbo run dev --filter=./apps/docs",
+    "dev:admin": "pnpm exec turbo run dev --filter=./apps/admin",
     "lint": "pnpm exec turbo run lint",
     "lint:fix": "pnpm exec turbo run lint -- --fix",
     "test": "pnpm exec turbo run test",
