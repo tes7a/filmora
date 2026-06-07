@@ -7,6 +7,8 @@
     "dev:api": "pnpm exec turbo run dev --filter=./apps/api",
     "dev:web": "pnpm exec turbo run dev --filter=./apps/web",
     "dev:admin": "pnpm exec turbo run dev --filter=./apps/admin",
+    "db:migrate": "pnpm --dir apps/api exec prisma migrate deploy",
+    "db:seed": "pnpm --dir apps/api exec prisma db seed",
     "lint": "pnpm exec turbo run lint",
     "lint:fix": "pnpm exec turbo run lint -- --fix",
     "test": "pnpm exec turbo run test",

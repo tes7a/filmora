@@ -57,6 +57,8 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
+  app.setGlobalPrefix('api');
+
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Filmora API')
     .setDescription('Film catalog backend API')

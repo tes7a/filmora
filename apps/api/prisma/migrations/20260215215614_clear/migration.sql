@@ -1,11 +1,11 @@
 -- DropIndex
-DROP INDEX "idx_films_status_average_rating";
+DROP INDEX IF EXISTS "idx_films_status_average_rating";
 
 -- DropIndex
-DROP INDEX "idx_films_status_popularity";
+DROP INDEX IF EXISTS "idx_films_status_popularity";
 
 -- DropIndex
-DROP INDEX "idx_films_status_release_year";
+DROP INDEX IF EXISTS "idx_films_status_release_year";
 
 -- CreateIndex
 CREATE INDEX "idx_films_status_release_year" ON "films"("status", "release_year");
