@@ -18,23 +18,13 @@ body {
   min-height: 100vh;
 }
 
-.app-shell {
+.login-page {
   min-height: 100vh;
+  padding: 24px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 24px;
-}
-
-.heading {
-  margin: 0;
-  font-size: 2rem;
-  line-height: 1.2;
-}
-
-.section-message {
-  margin: 0;
-  color: #475569;
+  background:
+    radial-gradient(circle at top left, rgba(15, 23, 42, 0.06), transparent 40%),
+    linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
 }

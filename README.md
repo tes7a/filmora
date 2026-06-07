@@ -59,6 +59,50 @@ pnpm dev:web
 pnpm dev:admin
 ```
 
+## Database
+
+Apply Prisma migrations from the monorepo root:
+
+```bash
+pnpm db:migrate
+```
+
+Run database seed from the monorepo root:
+
+```bash
+pnpm db:seed
+```
+
+If Prisma reports the failed migration `20260215215614_clear`, mark it as rolled back before running migrations again:
+
+```bash
+pnpm --dir apps/api exec prisma migrate resolve --rolled-back 20260215215614_clear
+```
+
+After resolving the failed migration, run `pnpm db:migrate` again.
+
+## Test accounts
+
+The database seed creates test users for the three main roles. All of them use the same password:
+
+```text
+Password123!
+```
+
+| Role        | Email                   |
+| ----------- | ----------------------- |
+| `admin`     | `admin@example.com`     |
+| `moderator` | `moderator@example.com` |
+| `user`      | `user1@example.com`     |
+
+Additional seeded user accounts are also available:
+
+- `user2@example.com`
+- `user3@example.com`
+- `user4@example.com`
+- `user5@example.com`
+- `user6@example.com`
+
 ## Quality checks
 
 ```bash

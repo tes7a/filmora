@@ -160,6 +160,317 @@ async function main() {
     });
   };
 
+  const ensureMigrationRecord = async (id: number, appliedAt: Date) => {
+    const existing = await prisma.migrations.findUnique({ where: { id } });
+    if (existing) return existing;
+
+    return prisma.migrations.create({
+      data: { id, applied_at: appliedAt },
+    });
+  };
+
+  const ensureAuthSession = async (params: {
+    userId: string;
+    refreshToken: string;
+    expiresAt: Date;
+    ip?: string | null;
+    userAgent?: string | null;
+  }) => {
+    const existing = await prisma.auth_sessions.findUnique({
+      where: { refresh_token: params.refreshToken },
+    });
+
+    if (existing) return existing;
+
+    return prisma.auth_sessions.create({
+      data: {
+        user_id: params.userId,
+        refresh_token: params.refreshToken,
+        expires_at: params.expiresAt,
+        created_at: now,
+        ip: params.ip ?? null,
+        user_agent: params.userAgent ?? null,
+      },
+    });
+  };
+
+  const ensureRating = async (params: {
+    userId: string;
+    filmId: string;
+    score: number;
+  }) => {
+    const existing = await prisma.ratings.findUnique({
+      where: {
+        user_id_film_id: {
+          user_id: params.userId,
+          film_id: params.filmId,
+        },
+      },
+    });
+
+    if (existing) {
+      return prisma.ratings.update({
+        where: { id: existing.id },
+        data: {
+          score: params.score,
+          updated_at: now,
+        },
+      });
+    }
+
+    return prisma.ratings.create({
+      data: {
+        user_id: params.userId,
+        film_id: params.filmId,
+        score: params.score,
+        created_at: now,
+        updated_at: now,
+      },
+    });
+  };
+
+  const ensureUserList = async (params: {
+    userId: string;
+    name: string;
+    type: 'watchlist' | 'watched' | 'custom';
+    isPublic?: boolean;
+  }) => {
+    const existing = await prisma.user_lists.findFirst({
+      where: {
+        user_id: params.userId,
+        name: params.name,
+      },
+    });
+
+    if (existing) return existing;
+
+    return prisma.user_lists.create({
+      data: {
+        user_id: params.userId,
+        name: params.name,
+        type: params.type,
+        is_public: params.isPublic ?? false,
+        created_at: now,
+        updated_at: now,
+      },
+    });
+  };
+
+  const ensureUserListItem = async (params: {
+    listId: string;
+    userId: string;
+    filmId: string;
+    position?: number | null;
+    note?: string | null;
+  }) => {
+    const existing = await prisma.user_list_items.findUnique({
+      where: {
+        user_id_list_id_film_id: {
+          user_id: params.userId,
+          list_id: params.listId,
+          film_id: params.filmId,
+        },
+      },
+    });
+
+    if (existing) {
+      return prisma.user_list_items.update({
+        where: { id: existing.id },
+        data: {
+          position: params.position ?? existing.position,
+          note: params.note ?? existing.note,
+        },
+      });
+    }
+
+    return prisma.user_list_items.create({
+      data: {
+        list_id: params.listId,
+        user_id: params.userId,
+        film_id: params.filmId,
+        position: params.position ?? null,
+        note: params.note ?? null,
+        created_at: now,
+      },
+    });
+  };
+
+  const ensureReview = async (params: {
+    userId: string;
+    filmId: string;
+    title: string;
+    body: string;
+    status?: 'visible' | 'hidden' | 'deleted';
+  }) => {
+    const existing = await prisma.reviews.findUnique({
+      where: {
+        user_id_film_id: {
+          user_id: params.userId,
+          film_id: params.filmId,
+        },
+      },
+    });
+
+    if (existing) {
+      return existing;
+    }
+
+    return prisma.reviews.create({
+      data: {
+        user_id: params.userId,
+        film_id: params.filmId,
+        status: params.status ?? 'visible',
+        created_at: now,
+        updated_at: now,
+      },
+    });
+  };
+
+  const ensureReviewVersion = async (params: {
+    reviewId: string;
+    versionNumber: number;
+    title: string;
+    body: string;
+    editedByUserId?: string | null;
+  }) => {
+    const existing = await prisma.review_versions.findUnique({
+      where: {
+        review_id_version_number: {
+          review_id: params.reviewId,
+          version_number: params.versionNumber,
+        },
+      },
+    });
+
+    if (existing) return existing;
+
+    return prisma.review_versions.create({
+      data: {
+        review_id: params.reviewId,
+        version_number: params.versionNumber,
+        title: params.title,
+        body: params.body,
+        created_at: now,
+        edited_by_user_id: params.editedByUserId ?? null,
+      },
+    });
+  };
+
+  const ensureComment = async (params: {
+    reviewId: string;
+    userId: string;
+    body: string;
+    parentId?: string | null;
+    status?: 'visible' | 'hidden' | 'deleted';
+  }) => {
+    const existing = await prisma.comments.findFirst({
+      where: {
+        review_id: params.reviewId,
+        user_id: params.userId,
+        body: params.body,
+        parent_id: params.parentId ?? null,
+      },
+      select: { id: true },
+    });
+
+    if (existing) {
+      return prisma.comments.findUniqueOrThrow({ where: { id: existing.id } });
+    }
+
+    return prisma.comments.create({
+      data: {
+        review_id: params.reviewId,
+        user_id: params.userId,
+        body: params.body,
+        parent_id: params.parentId ?? null,
+        status: params.status ?? 'visible',
+        created_at: now,
+        updated_at: now,
+      },
+    });
+  };
+
+  const ensureComplaint = async (params: {
+    userId: string;
+    targetType: 'review' | 'comment';
+    targetId: string;
+    reason: string;
+    status?: 'pending' | 'in_review' | 'resolved' | 'rejected';
+  }) => {
+    const existing = await prisma.complaints.findFirst({
+      where: {
+        user_id: params.userId,
+        target_type: params.targetType,
+        target_id: params.targetId,
+        reason: params.reason,
+      },
+      select: { id: true },
+    });
+
+    if (existing) {
+      return prisma.complaints.findUniqueOrThrow({
+        where: { id: existing.id },
+      });
+    }
+
+    return prisma.complaints.create({
+      data: {
+        user_id: params.userId,
+        target_type: params.targetType,
+        target_id: params.targetId,
+        reason: params.reason,
+        status: params.status ?? 'pending',
+        created_at: now,
+        updated_at: now,
+      },
+    });
+  };
+
+  const ensureModerationAction = async (params: {
+    moderatorId: string;
+    targetType: 'review' | 'comment' | 'user' | 'film';
+    targetId: string;
+    actionType:
+      | 'hide_review'
+      | 'unhide_review'
+      | 'hide_comment'
+      | 'unhide_comment'
+      | 'block_user'
+      | 'unblock_user'
+      | 'hide_film'
+      | 'unhide_film';
+    reason?: string | null;
+    complaintId?: string | null;
+  }) => {
+    const existing = await prisma.moderation_actions.findFirst({
+      where: {
+        moderator_id: params.moderatorId,
+        target_type: params.targetType,
+        target_id: params.targetId,
+        action_type: params.actionType,
+      },
+      select: { id: true },
+    });
+
+    if (existing) {
+      return prisma.moderation_actions.findUniqueOrThrow({
+        where: { id: existing.id },
+      });
+    }
+
+    return prisma.moderation_actions.create({
+      data: {
+        moderator_id: params.moderatorId,
+        target_type: params.targetType,
+        target_id: params.targetId,
+        action_type: params.actionType,
+        reason: params.reason ?? null,
+        complaint_id: params.complaintId ?? null,
+        created_at: now,
+      },
+    });
+  };
+
   // Seed admin & moderator
   const adminUser = await ensureUser('admin@example.com', 'Admin');
   await ensureRole(adminUser.id, 'admin');
@@ -536,8 +847,383 @@ async function main() {
     }
   }
 
+  const seededUsers = await prisma.users.findMany({
+    where: {
+      email: {
+        in: [
+          'admin@example.com',
+          'moderator@example.com',
+          'user1@example.com',
+          'user2@example.com',
+          'user3@example.com',
+          'user4@example.com',
+          'user5@example.com',
+          'user6@example.com',
+        ],
+      },
+    },
+    select: { id: true, email: true, display_name: true, status: true },
+  });
+  const userByEmail = new Map(seededUsers.map((user) => [user.email, user]));
+
+  const seedFilmTitles = mockFilms
+    .slice(0, 12)
+    .map((film) => film.original_title);
+  const seededFilms = await prisma.films.findMany({
+    where: { original_title: { in: seedFilmTitles } },
+    select: { id: true, original_title: true },
+  });
+  const filmByOriginalTitle = new Map(
+    seededFilms.map((film) => [film.original_title, film]),
+  );
+
+  // Seed app migration history table
+  const migrationEntries = [
+    { id: 1, appliedAt: new Date('2026-01-01T00:00:00.000Z') },
+    { id: 2, appliedAt: new Date('2026-02-01T00:00:00.000Z') },
+    { id: 3, appliedAt: new Date('2026-03-01T00:00:00.000Z') },
+  ];
+
+  for (const entry of migrationEntries) {
+    await ensureMigrationRecord(entry.id, entry.appliedAt);
+  }
+
+  // Seed auth sessions
+  const adminSeedUser = userByEmail.get('admin@example.com');
+  const moderatorSeedUser = userByEmail.get('moderator@example.com');
+  const user1 = userByEmail.get('user1@example.com');
+  const user2 = userByEmail.get('user2@example.com');
+  const user3 = userByEmail.get('user3@example.com');
+  const user4 = userByEmail.get('user4@example.com');
+  const user5 = userByEmail.get('user5@example.com');
+  const user6 = userByEmail.get('user6@example.com');
+
+  if (adminSeedUser) {
+    await ensureAuthSession({
+      userId: adminSeedUser.id,
+      refreshToken: 'seed-admin-refresh-token',
+      expiresAt: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
+      ip: '127.0.0.1',
+      userAgent: 'Filmora Seed Script',
+    });
+  }
+
+  if (moderatorSeedUser) {
+    await ensureAuthSession({
+      userId: moderatorSeedUser.id,
+      refreshToken: 'seed-moderator-refresh-token',
+      expiresAt: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
+      ip: '127.0.0.1',
+      userAgent: 'Filmora Seed Script',
+    });
+  }
+
+  if (user1) {
+    await ensureAuthSession({
+      userId: user1.id,
+      refreshToken: 'seed-user1-refresh-token',
+      expiresAt: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000),
+      ip: '127.0.0.1',
+      userAgent: 'Filmora Seed Script',
+    });
+  }
+
+  // Seed ratings
+  const ratingsToSeed = [
+    { user: user1, filmTitle: 'mock-film-001', score: 9 },
+    { user: user2, filmTitle: 'mock-film-002', score: 8 },
+    { user: user3, filmTitle: 'mock-film-003', score: 7 },
+    { user: user4, filmTitle: 'mock-film-004', score: 10 },
+    { user: user5, filmTitle: 'mock-film-005', score: 6 },
+    { user: user6, filmTitle: 'mock-film-006', score: 8 },
+    { user: adminSeedUser, filmTitle: 'mock-film-007', score: 9 },
+    { user: moderatorSeedUser, filmTitle: 'mock-film-008', score: 7 },
+  ] as const;
+
+  for (const item of ratingsToSeed) {
+    const film = filmByOriginalTitle.get(item.filmTitle);
+    if (!item.user || !film) continue;
+
+    await ensureRating({
+      userId: item.user.id,
+      filmId: film.id,
+      score: item.score,
+    });
+  }
+
+  // Seed user lists and list items
+  const userListsSeed: any[] = [];
+  if (adminSeedUser) {
+    userListsSeed.push(
+      await ensureUserList({
+        userId: adminSeedUser.id,
+        name: 'Admin Watchlist',
+        type: 'watchlist',
+        isPublic: false,
+      }),
+    );
+  }
+  if (moderatorSeedUser) {
+    userListsSeed.push(
+      await ensureUserList({
+        userId: moderatorSeedUser.id,
+        name: 'Moderator Watchlist',
+        type: 'watchlist',
+        isPublic: false,
+      }),
+    );
+  }
+  if (user1) {
+    userListsSeed.push(
+      await ensureUserList({
+        userId: user1.id,
+        name: 'Weekend Picks',
+        type: 'custom',
+        isPublic: true,
+      }),
+    );
+  }
+  if (user2) {
+    userListsSeed.push(
+      await ensureUserList({
+        userId: user2.id,
+        name: 'Already Watched',
+        type: 'watched',
+        isPublic: false,
+      }),
+    );
+  }
+
+  const seedFilmOrder = seedFilmTitles
+    .map((title) => filmByOriginalTitle.get(title))
+    .filter((film): film is { id: string; original_title: string } =>
+      Boolean(film),
+    );
+
+  const listFilmPairs = [
+    {
+      list: userListsSeed[0],
+      film: seedFilmOrder[0],
+      user: adminSeedUser,
+      position: 1,
+    },
+    {
+      list: userListsSeed[0],
+      film: seedFilmOrder[1],
+      user: adminSeedUser,
+      position: 2,
+    },
+    {
+      list: userListsSeed[1],
+      film: seedFilmOrder[2],
+      user: moderatorSeedUser,
+      position: 1,
+    },
+    {
+      list: userListsSeed[2],
+      film: seedFilmOrder[3],
+      user: user1,
+      position: 1,
+    },
+    {
+      list: userListsSeed[2],
+      film: seedFilmOrder[4],
+      user: user1,
+      position: 2,
+    },
+    {
+      list: userListsSeed[3],
+      film: seedFilmOrder[5],
+      user: user2,
+      position: 1,
+    },
+  ] as const;
+
+  for (const item of listFilmPairs) {
+    if (!item.list || !item.film || !item.user) continue;
+
+    await ensureUserListItem({
+      listId: item.list.id,
+      userId: item.user.id,
+      filmId: item.film.id,
+      position: item.position,
+      note: `Seed item ${item.position}`,
+    });
+  }
+
+  // Seed reviews, review versions and comments
+  const reviewSpecs = [
+    {
+      user: user1,
+      filmTitle: 'mock-film-001',
+      title: 'A sharp opener',
+      body: 'Strong opening with good pacing.',
+    },
+    {
+      user: user2,
+      filmTitle: 'mock-film-002',
+      title: 'Visually engaging',
+      body: 'The cinematography carries the whole film.',
+    },
+    {
+      user: user3,
+      filmTitle: 'mock-film-003',
+      title: 'Solid genre piece',
+      body: 'A competent and enjoyable watch.',
+    },
+    {
+      user: user4,
+      filmTitle: 'mock-film-004',
+      title: 'Best one in the batch',
+      body: 'This one is the most memorable.',
+    },
+    {
+      user: user5,
+      filmTitle: 'mock-film-005',
+      title: 'Mixed but promising',
+      body: 'The ideas are there even if the execution is uneven.',
+    },
+    {
+      user: user6,
+      filmTitle: 'mock-film-006',
+      title: 'Crowd pleaser',
+      body: 'Easy to recommend for a casual watch.',
+    },
+  ] as const;
+
+  const reviewsSeed: any[] = [];
+  for (const spec of reviewSpecs) {
+    const film = filmByOriginalTitle.get(spec.filmTitle);
+    if (!spec.user || !film) continue;
+
+    const review = await ensureReview({
+      userId: spec.user.id,
+      filmId: film.id,
+      title: spec.title,
+      body: spec.body,
+    });
+
+    const firstVersion = await ensureReviewVersion({
+      reviewId: review.id,
+      versionNumber: 1,
+      title: spec.title,
+      body: spec.body,
+      editedByUserId: spec.user.id,
+    });
+
+    const finalVersion =
+      spec.user === user4
+        ? await ensureReviewVersion({
+            reviewId: review.id,
+            versionNumber: 2,
+            title: `${spec.title} updated`,
+            body: `${spec.body} Updated after a second viewing.`,
+            editedByUserId: adminSeedUser?.id ?? spec.user.id,
+          })
+        : firstVersion;
+
+    await prisma.reviews.update({
+      where: { id: review.id },
+      data: {
+        current_version_id: finalVersion.id,
+        updated_at: now,
+      },
+    });
+
+    reviewsSeed.push({ review, film, user: spec.user, version: finalVersion });
+  }
+
+  const commentSeeds: any[] = [];
+  for (let index = 0; index < reviewsSeed.length; index += 1) {
+    const review = reviewsSeed[index];
+    const topLevelComment = await ensureComment({
+      reviewId: review.review.id,
+      userId: adminSeedUser?.id ?? review.user.id,
+      body: `Seed comment for ${review.film.original_title}`,
+    });
+
+    commentSeeds.push(topLevelComment);
+
+    if (index % 2 === 0 && moderatorSeedUser) {
+      const reply = await ensureComment({
+        reviewId: review.review.id,
+        userId: moderatorSeedUser.id,
+        body: `Reply on ${review.film.original_title}`,
+        parentId: topLevelComment.id,
+      });
+
+      commentSeeds.push(reply);
+    }
+  }
+
+  // Seed complaints and moderation actions
+  const complaint1 = reviewsSeed[0]
+    ? await ensureComplaint({
+        userId: user2?.id ?? adminSeedUser?.id ?? reviewsSeed[0].user.id,
+        targetType: 'review',
+        targetId: reviewsSeed[0].review.id,
+        reason: 'Review contains spam-like phrasing',
+        status: 'pending',
+      })
+    : null;
+
+  const complaint2 = commentSeeds[0]
+    ? await ensureComplaint({
+        userId: user3?.id ?? adminSeedUser?.id ?? reviewsSeed[0].user.id,
+        targetType: 'comment',
+        targetId: commentSeeds[0].id,
+        reason: 'Comment is off-topic',
+        status: 'in_review',
+      })
+    : null;
+
+  if (moderatorSeedUser && complaint1 && reviewsSeed[0]) {
+    await ensureModerationAction({
+      moderatorId: moderatorSeedUser.id,
+      targetType: 'review',
+      targetId: reviewsSeed[0].review.id,
+      actionType: 'hide_review',
+      reason: 'Hidden after complaint',
+      complaintId: complaint1.id,
+    });
+  }
+
+  if (moderatorSeedUser && complaint2 && commentSeeds[0]) {
+    await ensureModerationAction({
+      moderatorId: moderatorSeedUser.id,
+      targetType: 'comment',
+      targetId: commentSeeds[0].id,
+      actionType: 'hide_comment',
+      reason: 'Hidden after review',
+      complaintId: complaint2.id,
+    });
+  }
+
+  if (adminSeedUser && user4) {
+    await ensureModerationAction({
+      moderatorId: adminSeedUser.id,
+      targetType: 'user',
+      targetId: user4.id,
+      actionType: 'block_user',
+      reason: 'Seed moderation action',
+    });
+  }
+
+  if (adminSeedUser && seedFilmOrder[0]) {
+    await ensureModerationAction({
+      moderatorId: adminSeedUser.id,
+      targetType: 'film',
+      targetId: seedFilmOrder[0].id,
+      actionType: 'hide_film',
+      reason: 'Seed moderation action',
+    });
+  }
+
   console.log('50 mock films ensured');
   console.log('Mock countries, tags, persons and relations ensured');
+  console.log(
+    'Auth sessions, ratings, lists, reviews, comments and moderation seeded',
+  );
 
   console.log('Seeding completed!');
 }
